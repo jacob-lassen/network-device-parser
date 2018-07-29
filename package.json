@@ -1,0 +1,29 @@
+{
+  "name": "network-device-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacob-lassen/network-device-parser.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jacob-lassen/network-device-parser/issues"
+  },
+  "homepage": "https://github.com/jacob-lassen/network-device-parser#readme",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^5.2.0",
+    "nock": "^9.4.3"
+  },
+  "dependencies": {
+    "ramda": "^0.25.0",
+    "request": "^2.87.0"
+  }
+}
