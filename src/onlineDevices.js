@@ -16,13 +16,13 @@ module.exports = async function ({host, port, user, password}) {
 
     const html = await fetchHtmlMarkUp({host, port, user, password});
     return parseDevices(html);
-    return [];
 }
 
 function parseDevices (html) {
     singleLineHtml = html.replace(/(\r\n|\n|\r)/gm, '');
     const deviceReqex = /<center>(.*?)<\/center>/igm;
-    return singleLineHtml.match(deviceReqex).map(parseDevice);
+    const deviceMatches = singleLineHtml.match(deviceReqex) || [];
+    return deviceMatches.map(parseDevice);
 }
 
 function parseDevice (deviceMarkup) {

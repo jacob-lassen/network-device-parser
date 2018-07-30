@@ -65,7 +65,7 @@ describe('Device', () => {
             expect(Device).to.be.an('function');
         });
 
-        it('Should validate obejct from Device', () => {
+        it('Should validate object from Device', () => {
             const options = {
                 name: 'deviceName',
                 mac: 'f4:f5:d8:5f:f4:48',

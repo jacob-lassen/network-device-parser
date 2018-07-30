@@ -1,3 +1,4 @@
+const R = require('ramda');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const fs = require('fs');
@@ -25,7 +26,7 @@ const primeResponse = (fixture, nockOptions) => {
 }
 
 describe('onlineDevices', () => {
-    /*it('Should pack return value in a promise', () => {
+    it('Should pack return value in a promise', () => {
         primeResponse('3Devices.html');
         const result = onlineDevices(testOptions);
         expect(result).to.be.a('promise');
@@ -66,7 +67,7 @@ describe('onlineDevices', () => {
     it('Should fetch device markup with basic auth', async () => {
         const nockOptions = {
             reqheaders: {
-                'authorization': /Basic.*//*,
+                'authorization': /Basic.*/,
             }
         }
         const endPointSpy = primeResponse('noDevices.html', nockOptions)
@@ -78,7 +79,7 @@ describe('onlineDevices', () => {
         primeResponse('noDevices.html');
         const result = await onlineDevices(testOptions);
         expect(result).to.have.length.of(0);
-    })*/
+    })
 
     it('Should return all online devices', async () => {
         primeResponse('3Devices.html');
