@@ -20,20 +20,20 @@ module.exports = async function ({host, port, user, password}) {
 
 function parseDevices (html) {
     singleLineHtml = html.replace(/(\r\n|\n|\r)/gm, '');
-    const deviceReqex = /<center>(.*?)<\/center>/igm;
-    const deviceMatches = singleLineHtml.match(deviceReqex) || [];
-    return deviceMatches.map(parseDevice);
+    const varToLookFor = 'var device = \'';
+    const startOfJsonIndex = singleLineHtml.indexOf(varToLookFor) + varToLookFor.length;
+    const subString = singleLineHtml.slice(startOfJsonIndex);
+    const endOfJsonIndex = subString.indexOf('\';');
+    const jsonString = subString.slice(0, endOfJsonIndex);
+    const {devices} = JSON.parse(jsonString);
+    return devices.map(parseDevice);
 }
 
-function parseDevice (deviceMarkup) {
-    const spaceLess = deviceMarkup.replace(/\s/g, '');;
-    const name = spaceLess.match(/<a>(.*)<\/a>/)[1];
-    const mac = spaceLess.match(/<br>(.*)<br>/)[1];
-    const ip = spaceLess.match(/<br>(.*)<\/center>/)[1];
+function parseDevice (device) {
     return Device({
-        name: name,
-        mac: mac,
-        ip: ip,
+        name: device.DeviceName,
+        mac: device.MacAddress,
+        ip: device.IPAddress,
     });
 }
 
@@ -61,7 +61,9 @@ function fetchHtmlMarkUp ({host, port, user, password}) {
                 resolve(body.toString());
             });
         });
-        req.on('error', reject);
+        req.on('error', (err) => {
+            reject(err);
+        });
         req.end();
     });
 }

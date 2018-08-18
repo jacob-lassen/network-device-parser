@@ -1,38 +1,711 @@
 <html>
 <head>
-    <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-    <meta name="ProgId" content="FrontPage.Editor.Document">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>LAN Discover</title>
+  <link rel="stylesheet" type="text/css" href="LanDiscover/main.css">
+  <link rel="stylesheet" href='stylemain.css' type='text/css'>
+  <link rel="stylesheet" href='colors.css' type='text/css'>
+  <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+  <meta name="ProgId" content="FrontPage.Editor.Document">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script type="text/javascript" src="jquery.min.js"></script>
+  <title>Residential Gateway Configuration Status - LAN Discover</title>
+  <script type="text/javascript" src="LanDiscover/json2.js"></script>
+  <script language="JavaScript">
+
+  var currentAdminMode = "2";
+  var hardwareVersion = "2";
+  if (currentAdminMode > 2) {
+    window.location.replace("landiscoveripv6.html");
+  }
+
+  function selectinterface(value,obj){
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == value){
+        return true;
+      }
+    }
+    return false;
+  }
+  function selectdevicename(value,obj){
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == value){
+        return obj[i].DeviceName;
+      }
+    }
+    return '';
+  }
+  function selectmacaddress(value,obj){
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == value){
+        return obj[i].MacAddress;
+      }
+    }
+    return '';
+  }
+  function selectipaddress(value,obj){
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == value){
+        return obj[i].IPAddress;
+      }
+    }
+    return '';
+  }
+  function ethdevicename(type,obj,index){
+    var devices = 0;
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == type){
+        if (devices == index) {
+          return(obj[i].DeviceName)
+        };
+        devices++;
+      }
+    }
+    return devices;
+  }
+  function ethmacaddress(type,obj,index){
+    var devices = 0;
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == type){
+        if (devices == index) {
+          return(obj[i].MacAddress)
+        };
+        devices++;
+      }
+    }
+    return devices;
+  }
+  function ethipaddress(type,obj,index){
+    var devices = 0;
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == type){
+        if (devices == index) {
+          return(obj[i].IPAddress)
+        };
+        devices++;
+      }
+    }
+    return devices;
+  }
+  function numberethdevices(type,obj){
+    var devices = 0;
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == type){
+        devices++;
+      }
+    }
+    return devices;
+  }
+  function numberwifidevices(type,obj){
+    var devices = 0;
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == type){
+        devices++;
+      }
+    }
+    return devices;
+  }
+  function wifidevicename(type,obj,index){
+    var devices = 0;
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == type){
+        if (devices == index) {
+          return(obj[i].DeviceName)
+        };
+        devices++;
+      }
+    }
+    return devices;
+  }
+  function wifimacaddress(type,obj,index){
+    var devices = 0;
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == type){
+        if (devices == index) {
+          return(obj[i].MacAddress)
+        };
+        devices++;
+      }
+    }
+    return devices;
+  }
+  function wifiipaddress(type,obj,index){
+    var devices = 0;
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == type){
+        if (devices == index) {
+          return(obj[i].IPAddress)
+        };
+        devices++;
+      }
+    }
+    return devices;
+  }
+  function wifienable(value,obj){
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].name == value){
+        return obj[i].enabled;
+      }
+    }
+    return '';
+  }
+  function wifiband(value,obj){
+    for (var i = 0; i < obj.length; i++){
+      if (,obj[i].name == value){
+        return obj[i].band;
+      }
+    }
+    return '';
+  }
+  function IsSTBDevice(type,obj,index) {
+    var devices = 0;
+    for (var i = 0; i < obj.length; i++){
+      if (obj[i].Interface == type){
+        if (devices == index) {
+          if(obj[i].NatureDevice=="STB"){
+            return true
+          }
+          else {
+            return false
+          }
+        };
+        devices++;
+      }
+    }
+    return devices;
+  }
+var internet = "Allowed";
+//var interfaces = '{"interfaces":[{"nom":"wl0","band":"20mHz","enabled":"true"},{"nom":"wl1","band":"40mHz","enabled":"false"}]}';
+var interfaces = '{"interfaces":[{"name":"eth1","enabled":"false"},{"name":"eth0","enabled":"true"},{"name":"eth2","enabled":"false"},{"name":"eth3","enabled":"false"},{"name":"wl0","enabled":"true","band":"20MHz"},{"name":"wl1","enabled":"true","band":"80MHz"}]}';
+//var device = "{'devices':[{'Interface':'eth0', 'DeviceName':'ioi', 'MacAddress':'MAC', 'IPAddress':'IP'}]}";
+var device = '{"devices":[]}';
+
+
+  var devices = JSON.parse(device);
+  var interfac = JSON.parse(interfaces);     
+  var eth0 = selectinterface("eth0",devices.devices);
+  var eth1 = selectinterface("eth1",devices.devices);
+  var eth2 = selectinterface("eth2",devices.devices);
+  var eth3 = selectinterface("eth3",devices.devices);
+  var eth0devices = numberethdevices("eth0",devices.devices);
+  var eth1devices = numberethdevices("eth1",devices.devices);
+  var eth2devices = numberethdevices("eth2",devices.devices);
+  var eth3devices = numberethdevices("eth3",devices.devices);
+  var eth1devicename = selectdevicename("eth0",devices.devices);
+  var eth2devicename = selectdevicename("eth1",devices.devices);
+  var eth3devicename = selectdevicename("eth2",devices.devices);
+  var eth4devicename = selectdevicename("eth3",devices.devices);
+  var eth1macaddress = selectmacaddress("eth0",devices.devices);
+  var eth2macaddress = selectmacaddress("eth1",devices.devices);
+  var eth3macaddress = selectmacaddress("eth2",devices.devices);
+  var eth4macaddress = selectmacaddress("eth3",devices.devices);
+  var eth1ipaddress = selectipaddress("eth0",devices.devices);
+  var eth2ipaddress = selectipaddress("eth1",devices.devices);
+  var eth3ipaddress = selectipaddress("eth2",devices.devices);
+  var eth4ipaddress = selectipaddress("eth3",devices.devices);
+  var wifi2gdevices = numberwifidevices("wl0",devices.devices);
+  var wifi5gdevices = numberwifidevices("wl1",devices.devices);
+  var wifi2genable = '1';
+  var wifi5genable = '1';
+  var wifi2gband = wifiband("wl0",interfac.interfaces);
+  var wifi5gband = wifiband("wl1",interfac.interfaces);
+  </script>
+
 </head>
+
 <body>
-    <blockquote>
-        <div class="description">
-            <b>Status -- LAN Discover</b>
-        </div>
+  <blockquote>
+  <div class="description">
+    <b>Status -- LAN Discover</b>
+  </div>
 
-        <div class="apDivrelative" style="height:720px">
-            <div id="wl5g">
-                <b>Wi-Fi 5G</b>
-            </div>
-            <div id="band5g">
-                Band: XXMHz
-            </div>
-            <div id="wl2g">
-                <b>Wi-Fi 2.4G</b>
-            </div>
-            <div id="band2g">
-                Band: XXMHz
-            </div>
+  <div class="apDivrelative" style="height:720px">
 
-            <div class="apDivrelative">
-                <div id="apDivmainline">
-                </div>
-            </div>
-        </div>
+    <div id="apDivrefresh">
+      <input name="NumNetgearScanRefresh" value="Refresh" onclick="window.location.reload();" class="num-button2" type="button">
+    </div>
 
-    </blockquote>
+    <div id="apDivinternet">
+      <script type="text/javascript">
+      if (internet != "Denied") {
+        document.write("<img src='LanDiscover/internet.png' alt='Connected to internet'>");
+      }
+      else {
+        document.write("<img src='LanDiscover/nointernet.png' alt='Not connected to internet'>")
+      }
+      </script>
+    </div>
 
+    <div id="apDivmain">
+      <script type="text/javascript">
+        if ( hardwareVersion == 2 ) {
+          document.write("<img src='LanDiscover/Fast3686.png' alt='3890V2'>");
+        }
+        else {
+          document.write("<img src='LanDiscover/Fast3890V3.png' alt='3890V3'>");
+        }
+      </script>
+   </div>
+
+   <div id="apDivwllink">
+     <img src="LanDiscover/wifi.png" alt="Wi-Fi">
+     <div id="apwl5g">
+      <a>
+        <script type="text/javascript">
+        if (wifi5genable == "1") {
+          document.write("ON");
+        }
+        else{
+          document.write("OFF");
+        };
+        </script>
+      </a>
+    </div> 
+    <div id="apwl2g">
+      <a>
+        <script type="text/javascript">
+        if (wifi2genable == "1") {
+          document.write("ON");
+        }
+        else{
+          document.write("OFF");
+        };
+        </script>
+      </a>
+    </div>
+  </div>
+  <div id="wl5g">
+    <b>Wi-Fi 5G</b>
+  </div>
+  <div id="band5g">
+    <script type="text/javascript">
+    if (wifi5genable == "1") {
+      document.write("Band: ");
+      document.write(wifi5gband);
+    }
+    </script> 
+  </div>
+  <div id="wl2g">
+    <b>Wi-Fi 2.4G</b>
+  </div>
+  <div id="band2g">
+  <script type="text/javascript">
+  if (wifi2genable == "1") {
+    document.write("Band: ");
+    document.write(wifi2gband);
+  }
+  </script> 
+  </div>
+
+  <div class="apDivrelative"> 
+   <div id="apDivmainline">
+   </div>
+   <div id="apDivether">
+    <img src="LanDiscover/port.png" alt="4port2">
+  </div>
+</div>
+<script type="text/javascript">
+if(eth0){
+  var topview = 0;
+  var i =0;
+  document.write("<div class='apDivrelative'>");
+  document.write("<div id='apDivetherport1'>");
+  document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+  document.write("</div>"); 
+  document.write("<div id='apDivether1'>");             
+  if (IsSTBDevice("eth0",devices.devices,0)) {          
+    document.write("<img src='LanDiscover/stb.png' alt='ethernet_link'>"); 
+  }   
+  else{
+    document.write("<img src='LanDiscover/ethdevice.png' alt='ethernet_link'>"); 
+  }   
+  document.write("</div>");       
+  document.write("<div id='apDivetherportmac1'>");
+  document.write("<center>");
+  document.write("<br>");
+  document.write("<a>"+ethdevicename("eth0",devices.devices,0)+"</a>");
+  document.write("<br>"+ethmacaddress("eth0",devices.devices,0)+"<br> "+ethipaddress("eth0",devices.devices,0));
+  document.write("</center>");
+  document.write("</div>");
+  document.write("</div>");
+  i++;
+  while ( i < eth0devices ) {
+    topview += 108;
+    document.write("<div class='apDivrelative' style=\"TOP:"+topview+"px;\">");
+    document.write("<div id='apDivetherport1'>");
+    document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+    document.write("</div>"); 
+    document.write("<div id='apDivetherport11'>");
+    document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+    document.write("</div>");
+    document.write("<div id='apDivether1'>");             
+    if (IsSTBDevice("eth0",devices.devices,i)) {          
+       document.write("<img src='LanDiscover/stb.png' alt='ethernet_link'>"); 
+    }   
+    else{
+       document.write("<img src='LanDiscover/ethdevice.png' alt='ethernet_link'>"); 
+    } 
+    document.write("</div>");                          
+    document.write("<div id='apDivetherportmac1'>");
+    document.write("<center>");
+    document.write("<br>");
+    document.write("<a>"+ethdevicename("eth0",devices.devices,i)+"</a>");
+    document.write("<br>"+ethmacaddress("eth0",devices.devices,i)+"<br> "+ethipaddress("eth0",devices.devices,i));
+    document.write("</center>");
+    document.write("</div>");
+    document.write("</div>");
+    i++;
+  }
+}
+if(eth1){
+  var topview = 0;
+  var i =0;
+  document.write("<div class='apDivrelative'>");
+  document.write("<div id='apDivetherport2'>");
+  document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+  document.write("</div>"); 
+  document.write("<div id='apDivether2'>");             
+  if (IsSTBDevice("eth1",devices.devices,0)) {          
+    document.write("<img src='LanDiscover/stb.png' alt='ethernet_link'>"); 
+  }   
+  else{
+    document.write("<img src='LanDiscover/ethdevice.png' alt='ethernet_link'>"); 
+  }   
+  document.write("</div>");       
+  document.write("<div id='apDivetherportmac2'>");
+  document.write("<center>");
+  document.write("<br>");
+  document.write("<a>"+ethdevicename("eth1",devices.devices,0)+"</a>");
+  document.write("<br>"+ethmacaddress("eth1",devices.devices,0)+"<br> "+ethipaddress("eth1",devices.devices,0));
+  document.write("</center>");
+  document.write("</div>");
+  document.write("</div>");
+  i++;
+  while ( i < eth1devices ) {
+    topview += 108;
+    document.write("<div class='apDivrelative' style=\"TOP:"+topview+"px;\">");
+    document.write("<div id='apDivetherport2'>");
+    document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+    document.write("</div>"); 
+    document.write("<div id='apDivetherport22'>");
+    document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+    document.write("</div>");
+    document.write("<div id='apDivether2'>");  
+    if (IsSTBDevice("eth1",devices.devices,i)) {          
+       document.write("<img src='LanDiscover/stb.png' alt='ethernet_link'>"); 
+    }   
+    else{
+       document.write("<img src='LanDiscover/ethdevice.png' alt='ethernet_link'>"); 
+    }
+    document.write("</div>");                          
+    document.write("<div id='apDivetherportmac2'>");
+    document.write("<center>");
+    document.write("<br>");
+    document.write("<a>"+ethdevicename("eth1",devices.devices,i)+"</a>");
+    document.write("<br>"+ethmacaddress("eth1",devices.devices,i)+"<br> "+ethipaddress("eth1",devices.devices,i));
+    document.write("</center>");
+    document.write("</div>");
+    document.write("</div>");
+    i++;
+  }
+}
+if(eth2){
+  var topview = 0;
+  var i =0;
+  document.write("<div class='apDivrelative'>");
+  document.write("<div id='apDivetherport3'>");
+  document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+  document.write("</div>"); 
+  document.write("<div id='apDivether3'>");             
+  if (IsSTBDevice("eth2",devices.devices,0)) {          
+    document.write("<img src='LanDiscover/stb.png' alt='ethernet_link'>"); 
+  }   
+  else{
+    document.write("<img src='LanDiscover/ethdevice.png' alt='ethernet_link'>"); 
+  }    
+  document.write("</div>");       
+  document.write("<div id='apDivetherportmac3'>");
+  document.write("<center>");
+  document.write("<br>");
+  document.write("<a>"+ethdevicename("eth2",devices.devices,0)+"</a>");
+  document.write("<br>"+ethmacaddress("eth2",devices.devices,0)+"<br> "+ethipaddress("eth2",devices.devices,0));
+  document.write("</center>");
+  document.write("</div>");
+  document.write("</div>");
+  i++;
+  while ( i < eth2devices ) {
+    topview += 108;
+    document.write("<div class='apDivrelative' style=\"TOP:"+topview+"px;\">");
+    document.write("<div id='apDivetherport3'>");
+    document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+    document.write("</div>"); 
+    document.write("<div id='apDivetherport33'>");
+    document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+    document.write("</div>");
+    document.write("<div id='apDivether3'>");             
+    if (IsSTBDevice("eth2",devices.devices,i)) {          
+       document.write("<img src='LanDiscover/stb.png' alt='ethernet_link'>"); 
+    }   
+    else{
+       document.write("<img src='LanDiscover/ethdevice.png' alt='ethernet_link'>"); 
+    } 
+    document.write("</div>");                          
+    document.write("<div id='apDivetherportmac3'>");
+    document.write("<center>");
+    document.write("<br>");
+    document.write("<a>"+ethdevicename("eth2",devices.devices,i)+"</a>");
+    document.write("<br>"+ethmacaddress("eth2",devices.devices,i)+"<br> "+ethipaddress("eth2",devices.devices,i));
+    document.write("</center>");
+    document.write("</div>");
+    document.write("</div>");
+    i++;
+  }
+}
+if(eth3){
+  var topview = 0;
+  var i =0;
+  document.write("<div class='apDivrelative'>");
+  document.write("<div id='apDivetherport4'>");
+  document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+  document.write("</div>"); 
+  document.write("<div id='apDivether4'>");             
+  if (IsSTBDevice("eth3",devices.devices,0)) {          
+    document.write("<img src='LanDiscover/stb.png' alt='ethernet_link'>"); 
+  }   
+  else{
+    document.write("<img src='LanDiscover/ethdevice.png' alt='ethernet_link'>"); 
+  } 
+  document.write("</div>");       
+  document.write("<div id='apDivetherportmac4'>");
+  document.write("<center>");
+  document.write("<br>");
+  document.write("<a>"+ethdevicename("eth3",devices.devices,0)+"</a>");
+  document.write("<br>"+ethmacaddress("eth3",devices.devices,0)+"<br> "+ethipaddress("eth3",devices.devices,0));
+  document.write("</center>");
+  document.write("</div>");
+  document.write("</div>");
+  i++;
+  while ( i < eth3devices ) {
+    topview += 108;
+    document.write("<div class='apDivrelative' style=\"TOP:"+topview+"px;\">");
+    document.write("<div id='apDivetherport4'>");
+    document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+    document.write("</div>"); 
+    document.write("<div id='apDivetherport44'>");
+    document.write("<img src='LanDiscover/lignevert.png' alt='ethernet_link'>");
+    document.write("</div>");
+    document.write("<div id='apDivether4'>");             
+    if (IsSTBDevice("eth3",devices.devices,i)) {          
+       document.write("<img src='LanDiscover/stb.png' alt='ethernet_link'>"); 
+    }   
+    else{
+       document.write("<img src='LanDiscover/ethdevice.png' alt='ethernet_link'>"); 
+    } 
+    document.write("</div>");                          
+    document.write("<div id='apDivetherportmac4'>");
+    document.write("<center>");
+    document.write("<br>");
+    document.write("<a>"+ethdevicename("eth3",devices.devices,i)+"</a>");
+    document.write("<br>"+ethmacaddress("eth3",devices.devices,i)+"<br> "+ethipaddress("eth3",devices.devices,i));
+    document.write("</center>");
+    document.write("</div>");
+    document.write("</div>");
+    i++;
+  }
+}
+</script>
+
+<script type="text/javascript">
+if (wifi5gdevices > 0) {
+  var left = 618;
+  var i = 0;
+  document.write("<div id='verligne1'>");
+  document.write("<img src='LanDiscover/lignevert.png'>");
+  document.write("</div>");
+  document.write("<div style='Z-INDEX: 10; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 40px; FONT-SIZE: 8px; TOP: 474px; LEFT:"+(left+10)+"px'>");
+  document.write("<center>");
+  document.write("<br>");
+  document.write("<a>"+wifidevicename("wl1",devices.devices,0)+"</a>");
+  document.write("<br>"+wifimacaddress("wl1",devices.devices,0)+"<br> "+wifiipaddress("wl1",devices.devices,0));
+  document.write("</center>");
+  document.write("</div>");
+  document.write("<div id='wifi5g'>");
+  if (IsSTBDevice("wl1",devices.devices,0)) {          
+    document.write("<img src='LanDiscover/wifi5gstb1.png'>"); 
+  }   
+  else{
+    document.write("<img src='LanDiscover/wifi5g1.png'>"); 
+  }   
+  document.write("</div>");
+  i++;
+  while ( i < wifi5gdevices) {
+    left = left + 84;
+    document.write("<div id='horizligne1' style='left:"+(left-42)+"px'>");
+    document.write("<img src='LanDiscover/lignehoriz.png'>");
+    document.write("</div>");
+    document.write("<div style='Z-INDEX: 10; POSITION: absolute; WIDTH: 67px; HEIGHT: 40px; FONT-SIZE: 8px; TOP: 484px; LEFT:"+(left+10)+"px'");
+    document.write("<center>");
+    document.write("<br>");
+    document.write("<a>"+wifidevicename("wl1",devices.devices,i)+"</a>");
+    document.write("<br>"+wifimacaddress("wl1",devices.devices,i)+"<br> "+wifiipaddress("wl1",devices.devices,i));
+    document.write("</center>");
+    document.write("</div>");
+    document.write("<div id='wifi5g' style='left:"+left+"px'>");
+    if (IsSTBDevice("wl1",devices.devices,i)) {          
+      document.write("<img src='LanDiscover/wifi5gstb1.png'>"); 
+    }   
+    else{
+      document.write("<img src='LanDiscover/wifi5g1.png'>"); 
+    } 
+    document.write("</div>");
+    i++;
+  }
+}
+if (wifi2gdevices > 0) {
+  left = 618;
+  i = 0;
+  document.write("<div id='verligne2'>");
+  document.write("<img src='LanDiscover/lignevert.png'>");
+  document.write("</div>");
+  document.write("<div style='Z-INDEX: 10; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 40px; FONT-SIZE: 8px; TOP: 90px; LEFT:"+(left+10)+"px'>");
+  document.write("<center>");
+  document.write("<br>");
+  document.write("<a>"+wifidevicename("wl0",devices.devices,0)+"</a>");
+  document.write("<br>"+wifimacaddress("wl0",devices.devices,0)+"<br> "+wifiipaddress("wl0",devices.devices,0));
+  document.write("</center>");
+  document.write("</div>");
+  document.write("<div id='wifi2g'>");
+  if (IsSTBDevice("wl0",devices.devices,0)) {          
+    document.write("<img src='LanDiscover/wifi2gstb1.png'>"); 
+  }   
+  else{
+    document.write("<img src='LanDiscover/wifi2g1.png'>"); 
+  } 
+  document.write("</div>");
+  i++;
+  while ( i < wifi2gdevices) {
+    left = left + 84;
+    document.write("<div id='wifi2g' style='left:"+left+"px'>");
+    if (IsSTBDevice("wl0",devices.devices,0)) {          
+      document.write("<img src='LanDiscover/wifi2gstb1.png'>"); 
+    }   
+    else{
+      document.write("<img src='LanDiscover/wifi2g1.png'>"); 
+    } 
+    document.write("</div>");
+    document.write("<div style='Z-INDEX: 10; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 40px; FONT-SIZE: 8px; TOP: 90px; LEFT:"+(left+10)+"px'>");
+    document.write("<center>");
+    document.write("<br>");
+    document.write("<a>"+wifidevicename("wl0",devices.devices,i)+"</a>");
+    document.write("<br>"+wifimacaddress("wl0",devices.devices,i)+"<br> "+wifiipaddress("wl0",devices.devices,i));
+    document.write("</center>");
+    document.write("</div>");
+    document.write("<div id='horizligne2' style='left:"+(left-42)+"px'>");
+    document.write("<img src='LanDiscover/lignehoriz.png'>");
+    document.write("</div>");
+    i++;
+  }
+};
+</script>
+</div>
+<style type="text/css">
+<!--
+
+#apDivetherport1 {Z-INDEX: 1; POSITION: absolute; TOP: 607px; LEFT: 168px}
+#apDivetherport11 {Z-INDEX: 1; POSITION: absolute; TOP: 550px; LEFT: 168px}
+#apDivetherport2 {Z-INDEX: 1; POSITION: absolute; TOP: 607px; LEFT: 308px}
+#apDivetherport22 {Z-INDEX: 1; POSITION: absolute; TOP: 550px; LEFT: 308px}
+#apDivetherport3 {Z-INDEX: 1; POSITION: absolute; TOP: 607px; LEFT: 448px}
+#apDivetherport33 {Z-INDEX: 1; POSITION: absolute; TOP: 550px; LEFT: 448px}
+#apDivetherport4 {Z-INDEX: 1; POSITION: absolute; TOP: 607px; LEFT: 588px}
+#apDivetherport44 {Z-INDEX: 1; POSITION: absolute; TOP: 550px; LEFT: 588px}
+#apDivether1 {Z-INDEX: 1; POSITION: absolute; TOP: 653px; LEFT: 65px}
+#apDivether2 {Z-INDEX: 1; POSITION: absolute; TOP: 653px; LEFT: 205px}
+#apDivether3 {Z-INDEX: 1; POSITION: absolute; TOP: 653px; LEFT: 345px}
+#apDivether4 {Z-INDEX: 1; POSITION: absolute; TOP: 653px; LEFT: 485px}
+#apDivetherportmac1 {Z-INDEX: 10; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 40px; FONT-SIZE: 8px; TOP: 685px; LEFT: 70px;}
+#apDivetherport2 {Z-INDEX: 1; POSITION: absolute; TOP: 607px; LEFT: 308px}
+#apDivetherportmac2 {Z-INDEX: 10; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 40px; FONT-SIZE: 8px; TOP: 685px; LEFT: 210px;}
+#apDivetherport3 {Z-INDEX: 1; POSITION: absolute; TOP: 607px; LEFT: 448px}
+#apDivetherportmac3 {Z-INDEX: 10; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 40px; FONT-SIZE: 8px; TOP: 685px; LEFT: 350px;}
+#apDivetherport4 {Z-INDEX: 1; POSITION: absolute; TOP: 607px; LEFT: 588px}
+#apDivetherportmac4 {Z-INDEX: 10; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 40px; FONT-SIZE: 8px; TOP: 685px; LEFT: 490px;}
+
+#apDivwifirelative1-1 {}
+#apDivwifi1-1 {Z-INDEX: 1; POSITION: absolute; TOP: 221px; LEFT: 30px}
+#apDivwifimac1-1 {Z-INDEX: 5; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 38px; FONT-SIZE: 8px; TOP: 279px; LEFT: 58px}
+#apDivwifiline1 {}
+
+#apDivwifirelative2-1 {}
+#apDivwifi2-1 {Z-INDEX: 1; POSITION: absolute; TOP: 151px; LEFT: 30px}
+#apDivwifimac2-1{Z-INDEX: 5; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 38px; FONT-SIZE: 8px; TOP: 209px; LEFT: 58px}
+#apDivwifirelative2-2 {}
+#apDivwifi2-2 {Z-INDEX: 1; POSITION: absolute; TOP: 291px; LEFT: 30px}
+#apDivwifimac2-2{Z-INDEX: 5; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 38px; FONT-SIZE: 8px; TOP: 349px; LEFT: 58px}
+#apDivwifiline2 {Z-INDEX: 5; POSITION: absolute; HEIGHT: 138px; TOP: 217px;  LEFT: 163px ; WIDTH: 0px;  FLOAT: left; BORDER-RIGHT: #a8d437 4px solid}
+
+#apDivwifimacList {Z-INDEX: 1; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 260px; HEIGHT: 150px; COLOR: #242424; FONT-SIZE: 8px; TOP: 340px; LEFT: 10px}
+/*
+#apDivwifirelative3-1 {}
+#apDivwifi3-1 {Z-INDEX: 1; POSITION: absolute; TOP: 101px; LEFT: 30px}
+#apDivwifimac3-1{Z-INDEX: 5; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 38px; FONT-SIZE: 8px; TOP: 159px; LEFT: 58px}
+#apDivwifirelative3-2 {}
+#apDivwifi3-2 {Z-INDEX: 1; POSITION: absolute; TOP: 221px; LEFT: 30px}
+#apDivwifimac3-2{Z-INDEX: 5; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 38px; FONT-SIZE: 8px; TOP: 279px; LEFT: 58px}
+#apDivwifirelative3-3 {}
+#apDivwifi3-3 {Z-INDEX: 1; POSITION: absolute; TOP: 341px; LEFT: 30px}
+#apDivwifimac3-3{Z-INDEX: 5; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px; HEIGHT: 38px; FONT-SIZE: 8px; TOP: 399px; LEFT: 58px}
+#apDivwifiline3 {Z-INDEX: 5; POSITION: absolute; HEIGHT: 238px; TOP: 166px; LEFT: 163px ; WIDTH: 0px; FLOAT: left; BORDER-RIGHT: #a8d437 4px solid}
+*/
+#apDivmainline {Z-INDEX: 1; POSITION: absolute; HEIGHT: 140px; TOP: 368px; BORDER-RIGHT: #a8d437 4px solid; LEFT: 373px}
+#apDivether {Z-INDEX: 2; POSITION: absolute; TOP: 508px; LEFT: 130px}
+#apDivusb {Z-INDEX: 2; POSITION: relative; BACKGROUND-COLOR: #ffffff; WIDTH: 66px; HEIGHT: 35px; COLOR: #242424; FONT-SIZE: 9px; TOP: 249px; LEFT: 630px}
+#apwl5g {Z-INDEX: 2; POSITION: absolute; WIDTH: 65px; HEIGHT: 21px; COLOR: #242424; FONT-SIZE: 10px; TOP: 153px; LEFT: 233px}
+#apwl2g {Z-INDEX: 2; POSITION: absolute; WIDTH: 65px; HEIGHT: 21px; COLOR: #242424; FONT-SIZE: 10px; TOP:  60px; LEFT: 233px}
+#apDivSinglePhone {Z-INDEX: 2; POSITION: absolute; WIDTH: 65px; HEIGHT: 21px; COLOR: #242424; FONT-SIZE: 10px; TOP: 95px; LEFT: 163px}
+#apDivrefresh{Z-INDEX: 1; POSITION: absolute; HEIGHT: 35px; TOP: 30px; LEFT: 30px}
+.apDivrelative {POSITION: relative;}
+#apDivinternet {Z-INDEX: 1; POSITION: absolute; HEIGHT: 0px; TOP: 30px; LEFT: 332px}
+#apDivmain {Z-INDEX: 1; POSITION: absolute; HEIGHT: 0px; TOP: 230px; LEFT: 275px}
+#apDivusblink {Z-INDEX: 1; POSITION: absolute; WIDTH: 425px; HEIGHT: 0px; TOP: 210px; LEFT: 422px}
+#apDivwllink {Z-INDEX: 1; POSITION: absolute; HEIGHT: 0px; TOP: 206px; LEFT: 474px}
+#apDivUsb {Z-INDEX: 3; POSITION: absolute; HEIGHT: 0px; TOP: 73px; LEFT: 468px}
+#apDivUsbInfor {Z-INDEX: 10; POSITION: absolute; BACKGROUND-COLOR: #ffffff; WIDTH: 67px;  FONT-SIZE: 8px; TOP: 60px; LEFT: 50px;}
+#apDivwifilink {Z-INDEX: 1; POSITION: absolute; TOP: 283px; LEFT: 167px}
+#wl5g {
+	Z-INDEX: 2; POSITION: absolute; HEIGHT: 15px; COLOR: #242424; TOP: 312px; LEFT: 639px
+}
+#wl2g {
+	Z-INDEX: 2; POSITION: absolute; HEIGHT: 15px; COLOR: #242424; TOP: 219px; LEFT: 633px
+}
+#band5g {
+  Z-INDEX: 2; POSITION: absolute; WIDTH: 55px; HEIGHT: 15px; COLOR: #242424; FONT-SIZE: 12px; TOP: 303px; LEFT: 709px
+}
+#band2g {
+  Z-INDEX: 2; POSITION: absolute; WIDTH: 55px; HEIGHT: 15px; COLOR: #242424; FONT-SIZE: 12px; TOP: 210px; LEFT: 709px
+}
+#apSinglePhoneLine {
+	Z-INDEX: 2; POSITION: absolute; WIDTH: 55px; HEIGHT: 15px; COLOR: #242424; FONT-SIZE: 12px; TOP: 250px; LEFT: 639px
+}
+#verligne1 {
+  Z-INDEX: 2; POSITION: absolute; WIDTH: 55px; HEIGHT: 15px; TOP: 378px; LEFT: 660px
+}
+#horizligne1 {
+  Z-INDEX: 2; POSITION: absolute; WIDTH: 55px; HEIGHT: 15px; TOP: 410px; LEFT: 660px
+}
+#wifi5g {
+  Z-INDEX: 2; POSITION: absolute; WIDTH: 55px; HEIGHT: 15px; TOP: 414px; LEFT: 618px
+}
+#verligne2 {
+  Z-INDEX: 2; POSITION: absolute; WIDTH: 55px; HEIGHT: 15px; TOP: 123px; LEFT: 660px
+}
+#horizligne2 {
+  Z-INDEX: 2; POSITION: absolute; WIDTH: 55px; HEIGHT: 15px; TOP: 170px; LEFT: 660px
+}
+#wifi2g {
+  Z-INDEX: 2; POSITION: absolute; WIDTH: 55px; HEIGHT: 15px; TOP: 50px; LEFT: 619px
+}
+-->
+</style>
+
+</blockquote>
 </body>
-
 </html>
