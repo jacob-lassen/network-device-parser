@@ -24,8 +24,9 @@ function parseDevices (html) {
     const startOfJsonIndex = singleLineHtml.indexOf(varToLookFor) + varToLookFor.length;
     const subString = singleLineHtml.slice(startOfJsonIndex);
     const endOfJsonIndex = subString.indexOf('\';');
-    const jsonString = subString.slice(0, endOfJsonIndex);
-    const {devices} = JSON.parse(jsonString);
+    const invalidJsonString = subString.slice(0, endOfJsonIndex);
+    const validJsonString = invalidJsonString.replace(',}', '}');
+    const {devices} = JSON.parse(validJsonString);
     return devices.map(parseDevice);
 }
 
